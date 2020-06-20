@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="/about.css">
+  <title>Donate India</title>
+</head>
+
+<body>
+{{>nav}}
+<div style="padding: 16px;">
+
+  <table class="table" id="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Goal</th>
+        <th scope="col">Received</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+</div>
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="web31.min.js"></script>
+  <script src="./contractAbi.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <script>
+    var contractAddress = '0xf13A078c886cb022cE49819C2ebf9a26954Ce547';
+
+    //web3 = new Web3(window.web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:9545"));
+
+    web3 = new Web3(window.ethereum)
+    window.ethereum.enable().catch(error => {
+      // User denied account access
+      console.log(error)
+    })
+
+    var version = web3.version;
+    console.log("using web3 version: " + version);
+
+    var ApprovalContract = new web3.eth.Contract(abi, contractAddress);
+
+    //    console.log(ApprovalContract);
+
+    ApprovalContract.methods.campaignCount().call(
+      function (error, result) {
+        if (error) {
+          console.log('error: ' + error);
+        } else {
+          for (let i = 1; i <= result; i++) {
+            ApprovalContract.methods.campaigns(i).call(
+              function (error, result) {
+                if (error) {
+                  console.log('error: ' + error);
+                } else {
+                  result._goal == result._received ?
+                    $("#table").append(`
+                  <tr>
+                    <th scope="row" style="vertical-align:middle">${result._id}</th>
+                    <td style="vertical-align:middle">${result._name}</td>
+                    <td style="vertical-align:middle">${result._description}</td>
+                    <td style="vertical-align:middle">${web3.utils.fromWei(result._goal, 'ether')}</td>
+                    <td style="vertical-align:middle">${web3.utils.fromWei(result._received, 'ether')}</td>-=
+                  </tr>
+                  `) :
+                  $("#table").append(`
+                  <tr>
+                    <th scope="row" style="vertical-align:middle">${result._id}</th>
+                    <td style="vertical-align:middle">${result._name}</td>
+                    <td style="vertical-align:middle">${result._description}</td>
+                    <td style="vertical-align:middle">${web3.utils.fromWei(result._goal, 'ether')}</td>
+                    <td style="vertical-align:middle">${web3.utils.fromWei(result._received, 'ether')}</td>-=
+                    <td><a href="/donate/${result._id}"><button type="button" class="btn btn-primary">Donate</button></a></td>
+                  </tr>
+                  `);
+                  console.log('-->', result)
+                  $('#deposit-result').html('Success TX: <b>' + result + '</b>');
+                }
+              })
+          }
+        }
+      })
+  </script>
+
+</body>
+
+</html>

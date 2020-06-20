@@ -1,0 +1,69 @@
+body,html{
+    overflow-x: hidden;
+  
+}
+.homepage{
+    background-image : url("./../images/mindjam3.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height:100vh;
+}
+.nav-item{
+    color: black;
+    background-color: white;
+    margin: 0 8px;
+}
+.text-container-big{
+    text-align: center;
+    background:rgba(255,255,255, 0.3);
+    margin-top: 2rem;
+    width: 45%;
+    border-radius: 3px;
+    padding: 3rem;
+
+}
+.text-container-big p{
+    color: white;
+    font-size: 1rem;
+}
+.text-container-big h3{
+    color : white;
+}
+.text-container{
+    text-align: center;
+    background:rgba(255,255,255, 0.3);
+    margin-top: 2rem;
+    width: 90%;
+    border-radius: 3px;
+    padding: 3rem;
+
+}
+.text-container p{
+    color: black;
+    font-size: 1rem;
+}
+.text-container h4{
+    color : black;
+}
+.homepage .btn{
+    width: 200px;
+    border-radius: 4px;
+    margin-right: 16px;
+    border: solid 2px;
+}
+.col{
+    padding: 0;
+}
+
+.container-fluid{
+    padding: 0;
+}
+.content-box{
+    height: 400px;
+}
+.written-content{
+    box-sizing: border-box;
+    text-align: center;
+    padding: 4rem;
+}

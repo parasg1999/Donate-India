@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="/about.css">
+  <title>Donate India</title>
+</head>
+
+<body>
+{{>nav}}
+<div style="padding:16px">
+
+  <form id="contract-form">
+    <div class="form-group">
+      <label for="Campaign Name">Campaign Name</label>
+      <input type="text" class="form-control" id="name" aria-describedby="nameHelp"
+        placeholder="Enter Campaign name" required="true">
+      {{!-- <small id="nameHelp" class="form-text text-muted">Enter your Name. Note: This will be displayed on the Campaign Page.</small> --}}
+    </div>
+    <div class="form-group">
+      <label for="Description">Description</label>
+      <textarea class="form-control" id="description" rows="4" aria-describedby="descHelp"
+        placeholder="Enter Description (And where the money will be spent)" required="true" ></textarea>
+    </div>
+    <div class="form-group">
+      <label for="Amount">Amount Required</label>
+      <input type="text" class="form-control" id="amount" aria-describedby="amountHelp"
+        placeholder="Amount required in ETH" required="true">
+      {{!-- <small id="amountHelp" class="form-text text-muted">How much you want to send in ETH.</small> --}}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <div id="deposit-result"></div>
+  </form>
+</div>
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="web31.min.js"></script>
+  <script src="contractAbi.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <script>
+    var contractAddress = '0xf13A078c886cb022cE49819C2ebf9a26954Ce547';
+
+    //web3 = new Web3(window.web3.currentProvider || new Web3.providers.HttpProvider("http://localhost:9545"));
+
+    web3 = new Web3(window.ethereum)
+    window.ethereum.enable().catch(error => {
+      // User denied account access
+      console.log(error)
+    })
+
+    var version = web3.version;
+    console.log("using web3 version: " + version);
+
+    var ApprovalContract = new web3.eth.Contract(abi, contractAddress);
+
+    console.log(ApprovalContract);
+
+    $('#contract-form').submit(function () {
+      event.preventDefault();
+      var name = $('#name').val();
+      var description = $('#description').val();
+      var amount = $('#amount').val();
+      if (amount <= 0) {
+        alert('You must send more than 0 ETH.');
+        return;
+      }
+      ApprovalContract.methods.addCampaign(amount, name, description).send({ from: web3.givenProvider.selectedAddress },
+        function (error, result) {
+          if (error) {
+            console.log('error: ' + error);
+            $('#deposit-result').html('Error: ' + error);
+          } else {
+            console.log(name + ' ' + amount);
+            $('#deposit-result').html('Success TX: <b>' + result + '</b>');
+          }
+        })
+    });
+
+  </script>
+
+</body>
+
+</html>
