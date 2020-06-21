@@ -10,3 +10,5 @@ You can use the website now.
 ## Usage
 
 When approving the transaction, you'll have to use the Account 3 (0x25F3fC22F781d7F76358E38107826f40bf2cBE22) since this account was used to deploy the smart contract.
+
+The campaigns can be created using any account and the donations can also be made using any account. 
