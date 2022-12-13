@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@maticnetwork/walletconnect-provider": "0.0.1-beta.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "hbs": "^4.1.1",
     "maticjs": "^1.0.1"
   },
